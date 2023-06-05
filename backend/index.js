@@ -18,7 +18,7 @@ mongoose.connect(process.env.MONGODB_PATH, {
     // Your code here
   });
 
-const PORT = process.env.SERVER_PORT || 9000
+const PORT = process.env.PORT || 4000
 const origin = process.env.CORS_ORIGIN || 'http://localhost:5173'
 
 const app = express()
