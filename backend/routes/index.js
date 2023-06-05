@@ -17,12 +17,12 @@ api.get('/projects', async (req, res) => {
 
 api.get('/project/:id', async (req, res) => {
 
-    console.log(req.params.id)
+    // console.log(req.params.id)
     
     if (!req.params.id) res.status(422).send({ data: { error: true, message: 'Id is reaquire' } })
     try {
-        const data = await Project.find({ _id: mongoose.Types.ObjectId(req.params.id) }).sort({ order: 1 })
-        console.log("Project",data)
+        const data = await Project.find({ _id: new mongoose.Types.ObjectId(req.params.id) }).sort({ order: 1 })
+        // console.log("Project",data)
         return res.send(data)
     } catch (error) {
         return res.send(error)
@@ -69,7 +69,7 @@ api.put('/project/:id', async (req, res) => {
     const { error, value } = project.validate({ title: req.body.title, description: req.body.description });
     if (error) return res.status(422).send(error)
 
-    Project.updateOne({ _id: mongoose.Types.ObjectId(req.params.id) }, { ...value }, { upsert: true }, (error, data) => {
+    Project.updateOne({ _id: new mongoose.Types.ObjectId(req.params.id) }, { ...value }, { upsert: true }, (error, data) => {
         if (error) {
             res.send(error)
         } else {
@@ -82,7 +82,7 @@ api.put('/project/:id', async (req, res) => {
 
 api.delete('/project/:id', async (req, res) => {
     try {
-        const data = await Project.deleteOne({ _id: mongoose.Types.ObjectId(req.params.id) })
+        const data = await Project.deleteOne({ _id: new mongoose.Types.ObjectId(req.params.id) })
         res.send(data)
     } catch (error) {
         res.send(error)
@@ -96,6 +96,8 @@ api.delete('/project/:id', async (req, res) => {
 api.post('/project/:id/task', async (req, res) => {
 
 
+    console.log(req.params.id)
+
     if (!req.params.id) return res.status(500).send(`server error`);
 
     // validate type 
@@ -108,13 +110,13 @@ api.post('/project/:id/task', async (req, res) => {
     if (error) return res.status(422).send(error)
 
     try {
-        // const task = await Project.find({ _id: mongoose.Types.ObjectId(req.params.id) }, { "task.index": 1 })
-        const [{ task }] = await Project.find({ _id: mongoose.Types.ObjectId(req.params.id) }, { "task.index": 1 }).sort({ 'task.index': 1 })
+        // const task = await Project.find({ _id: new mongoose.Types.ObjectId(req.params.id) }, { "task.index": 1 })
+        const [{ task }] = await Project.find({ _id: new mongoose.Types.ObjectId(req.params.id) }, { "task.index": 1 }).sort({ 'task.index': 1 })
 
 
         let countTaskLength = [task.length, task.length > 0 ? Math.max(...task.map(o => o.index)) : task.length];
 
-        const data = await Project.updateOne({ _id: mongoose.Types.ObjectId(req.params.id) }, { $push: { task: { ...value, stage: "Requested", order: countTaskLength[0], index: countTaskLength[1] + 1 } } })
+        const data = await Project.updateOne({ _id: new mongoose.Types.ObjectId(req.params.id) }, { $push: { task: { ...value, stage: "Requested", order: countTaskLength[0], index: countTaskLength[1] + 1 } } })
         return res.send(data)
     } catch (error) {
         return res.status(500).send(error)
@@ -129,7 +131,7 @@ api.get('/project/:id/task/:taskId', async (req, res) => {
     try {
 
         let data = await Project.find(
-            { _id: mongoose.Types.ObjectId(req.params.id) },
+            { _id: new mongoose.Types.ObjectId(req.params.id) },
             {
                 task: {
                     $filter: {
@@ -139,7 +141,7 @@ api.get('/project/:id/task/:taskId', async (req, res) => {
                             $in: [
                                 "$$task._id",
                                 [
-                                    mongoose.Types.ObjectId(req.params.taskId)
+                                    new mongoose.Types.ObjectId(req.params.taskId)
                                 ]
                             ]
                         }
@@ -169,7 +171,7 @@ api.put('/project/:id/task/:taskId', async (req, res) => {
     if (error) return res.status(422).send(error)
 
     try {
-        // const data = await Project.find({ $and: [{ _id: mongoose.Types.ObjectId(req.params.id) }, { "task._id": mongoose.Types.ObjectId(req.params.taskId) }] },{
+        // const data = await Project.find({ $and: [{ _id: new mongoose.Types.ObjectId(req.params.id) }, { "task._id": new mongoose.Types.ObjectId(req.params.taskId) }] },{
         //     task: {
         //         $filter: {
         //             input: "$task",
@@ -178,7 +180,7 @@ api.put('/project/:id/task/:taskId', async (req, res) => {
         //                 $in: [
         //                     "$$task._id",
         //                     [
-        //                         mongoose.Types.ObjectId(req.params.taskId)
+        //                         new mongoose.Types.ObjectId(req.params.taskId)
         //                     ]
         //                 ]
         //             }
@@ -186,8 +188,8 @@ api.put('/project/:id/task/:taskId', async (req, res) => {
         //     }
         // })
         const data = await Project.updateOne({
-            _id: mongoose.Types.ObjectId(req.params.id),
-            task: { $elemMatch: { _id: mongoose.Types.ObjectId(req.params.taskId) } }
+            _id: new mongoose.Types.ObjectId(req.params.id),
+            task: { $elemMatch: { _id: new mongoose.Types.ObjectId(req.params.taskId) } }
         }, { $set: { "task.$.title": value.title, "task.$.description": value.description } })
         return res.send(data)
     } catch (error) {
@@ -201,7 +203,7 @@ api.delete('/project/:id/task/:taskId', async (req, res) => {
     if (!req.params.id || !req.params.taskId) return res.status(500).send(`server error`);
 
     try {
-        const data = await Project.updateOne({ _id: mongoose.Types.ObjectId(req.params.id) }, { $pull: { task: { _id: mongoose.Types.ObjectId(req.params.taskId) } } })
+        const data = await Project.updateOne({ _id: new mongoose.Types.ObjectId(req.params.id) }, { $pull: { task: { _id: new mongoose.Types.ObjectId(req.params.taskId) } } })
         return res.send(data)
     } catch (error) {
         return res.send(error)
@@ -222,8 +224,8 @@ api.put('/project/:id/todo', async (req, res) => {
 
     todo.map(async (item) => {
         await Project.updateOne({
-            _id: mongoose.Types.ObjectId(req.params.id),
-            task: { $elemMatch: { _id: mongoose.Types.ObjectId(item.name) } }
+            _id: new mongoose.Types.ObjectId(req.params.id),
+            task: { $elemMatch: { _id: new mongoose.Types.ObjectId(item.name) } }
         }, { $set: { "task.$.order": item.order, "task.$.stage": item.stage } })
     })
 
@@ -236,7 +238,7 @@ api.put('/project/:id/todo', async (req, res) => {
 //     if (!req.params.id) return res.status(500).send(`server error`);
 
 //     try {
-//         const data = await Project.find({ _id: mongoose.Types.ObjectId(req.params.id) }, { task: 1 })
+//         const data = await Project.find({ _id: new mongoose.Types.ObjectId(req.params.id) }, { task: 1 })
 //         return res.send(data)
 //     } catch (error) {
 //         return res.send(error)

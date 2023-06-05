@@ -109,11 +109,13 @@ function Task() {
     const { projectId } = useParams();
     const navigate = useNavigate();
 
-    console.log(projectId)
+    // console.log(projectId)
     useEffect(() => {
         if (!isAddTaskModalOpen || isRenderChange) {
+            // console.log("renderchange working")
             axios.get(`http://localhost:9000/project/${projectId}`)
                 .then((res) => {
+                    // console.log(res)
                     setTitle(res.data[0].title)
                     setColumns({
                         [uuid()]: {
