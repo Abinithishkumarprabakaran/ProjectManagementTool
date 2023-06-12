@@ -6,7 +6,7 @@ import Link from '@mui/material/Link';
 import { useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { REG_API } from "../../global.js";
+import { REG_API } from "../global.js";
 import { useState } from 'react';
 
 const formValidationSchema = yup.object({

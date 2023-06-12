@@ -13,6 +13,10 @@ import TaskModal from "./TaskModal";
 
 function Task() {
 
+    const { id } = useParams();
+
+    console.log(id)
+
     // const itemsFromBackend = [
     //     { _id: uuid(), content: "First task" },
     //     { _id: uuid(), content: "Second task" },

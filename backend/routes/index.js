@@ -9,6 +9,7 @@ const api = express.Router()
 api.get('/projects', async (req, res) => {
     try {
         const data = await Project.find({}, { task: 0, __v: 0, updatedAt: 0 })
+        console.log(data)
         return res.send(data)
     } catch (error) {
         return res.send(error)

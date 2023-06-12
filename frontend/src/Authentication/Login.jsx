@@ -6,7 +6,7 @@ import Link from '@mui/material/Link';
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { REG_API } from "../../global.js";
+import { REG_API } from "../global.js";
 import { useState } from 'react';
 
 const formValidationSchema = yup.object({
@@ -65,7 +65,7 @@ const existedUser = async (loginUser) => {
       const result = await data.json()
       // console.log("success", result)
       localStorage.setItem('token', result.token)
-      navigate(`/projects/${result.userId}`)
+      navigate(`/${result.userId}/projects`)
     }
 };
   return (

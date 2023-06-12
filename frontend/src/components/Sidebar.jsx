@@ -1,9 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import AddProjectModal from './AddProjectModal'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 // import toast from 'react-hot-toast'
 const Sidebar = () => {
+
+  const { id } = useParams();
+  console.log(id)
 
   const [isModalOpen, setModalState] = useState(false)
   const [projects, setProjects] = useState([])
