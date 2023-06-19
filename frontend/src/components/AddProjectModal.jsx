@@ -48,6 +48,7 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
                 .then((res) => {
                     closeModal()
                     const customEvent = new CustomEvent('projectUpdate', { detail: { ...res.data } });
+                    console.log(customEvent);
                     document.dispatchEvent(customEvent);
                     toast.success('Project updated successfully')
                     setTitle('')

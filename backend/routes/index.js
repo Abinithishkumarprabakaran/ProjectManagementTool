@@ -18,7 +18,7 @@ api.get('/projects', async (req, res) => {
 
 api.get('/project/:id', async (req, res) => {
 
-    // console.log(req.params.id)
+    console.log(req.params.id)
     
     if (!req.params.id) res.status(422).send({ data: { error: true, message: 'Id is reaquire' } })
     try {

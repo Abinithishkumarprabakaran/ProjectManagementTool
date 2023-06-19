@@ -15,6 +15,7 @@ const Sidebar = () => {
   })
 
   const handleLocation = (e) => {
+    console.log(e.currentTarget)
     setParamsWindow(new URL(e.currentTarget.href).pathname.slice(1))
   }
 
